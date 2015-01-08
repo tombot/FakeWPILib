@@ -1,14 +1,24 @@
 #!/usr/bin/ruby
 require 'fileutils'
+require 'mkmf'
 
-has_jar = File.exists?(ARGV[0])
-abort "Error: Robot code jar doesn't exist at #{ARGV[0]}" unless has_jar
+has_code = File.exists?(ARGV[0])
+abort "Error: Robot code doesn't exist in project #{ARGV[0]}" unless has_code
+abort "Error: Ant not found. Try installing with 'brew install ant'." unless find_executable 'ant'
+
+cur_dir = Dir.pwd
+Dir.chdir(ARGV[0])
+system('ant jar')
+
+Dir.chdir(cur_dir)
+
+jar_file = ARGV[0] + "/dist/FRCUserProgram.jar"
 
 tmp_dir = Dir.pwd + "/tmp"
 `rm -rf #{tmp_dir}`
 
 Dir.mkdir(tmp_dir) unless File.exists?(tmp_dir)
-FileUtils.cp ARGV[0], tmp_dir + "/FRCUserProgram.jar"
+FileUtils.cp jar_file, tmp_dir + "/FRCUserProgram.jar"
 
 dist_dir = Dir.pwd + "/dist"
 FileUtils.cp dist_dir + "/FakeWPILib.jar", tmp_dir + "/FakeWPILib.jar"
