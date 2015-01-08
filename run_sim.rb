@@ -27,4 +27,5 @@ FileUtils.rm "META-INF/MANIFEST.MF.old"
 Dir.chdir('..')
 `jar -cmvf classes/META-INF/MANIFEST.MF to_sim.jar -C classes .`
 
+system("java -jar to_sim.jar")
 
