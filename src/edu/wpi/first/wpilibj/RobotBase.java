@@ -188,24 +188,20 @@ public abstract class RobotBase {
 		try {
 			simRobot = (SimRobotBase) Class.forName(simRobotName).newInstance();
 			simRobot.prestart();
+			final SimRobotBase runnableSimRobot = simRobot;
+			
+			new Thread( new Runnable() {
+			    @Override
+			    public void run() {
+			    	runnableSimRobot.startRobotSim();
+			    }
+			}).start();
+			
 		} catch (Throwable t) {
 			t.printStackTrace();
 			System.err.println("WARNING: Robots don't quit!");
 			System.err.println("ERROR: Could not instantiate sim robot " + simRobotName + "!");
-			System.exit(1);
-			return;
 		}
-		
-		final SimRobotBase runnableSimRobot = simRobot;
-		
-		new Thread( new Runnable() {
-		    @Override
-		    public void run() {
-		    	runnableSimRobot.startRobotSim();
-		    }
-		}).start();
-		
-		System.out.println(robot);
 
 		boolean errorOnExit = false;
 		try {
