@@ -9,7 +9,7 @@ abort "Error: Sim Robot code doesn't exist in project #{ARGV[0]}" unless has_sim
 abort "Error: Ant not found. Try installing with 'brew install ant'." unless find_executable 'ant'
 
 cur_dir = Dir.pwd
-puts cur_dir
+
 Dir.chdir(ARGV[0])
 system('ant jar')
 
@@ -39,12 +39,9 @@ FileUtils.cp "META-INF/MANIFEST.MF.old", "META-INF/MANIFEST.MF"
 FileUtils.rm "META-INF/MANIFEST.MF.old"
 
 # Copy sim robot class files
-puts `pwd`
 `cp -r #{cur_dir}/#{ARGV[1]}/bin/ .`
 
 Dir.chdir('..')
-puts `find . | grep Robot`
-
 `jar -cmvf classes/META-INF/MANIFEST.MF to_sim.jar -C classes .`
 
 system("java -jar to_sim.jar")
