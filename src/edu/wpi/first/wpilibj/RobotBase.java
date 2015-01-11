@@ -7,11 +7,12 @@
 
 package edu.wpi.first.wpilibj;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.Manifest;
+
+import com.team254.fakewpilib.SimRobotBase;
 
 
 /**
@@ -155,6 +156,7 @@ public abstract class RobotBase {
 		initializeHardwareConfiguration();
 
 		String robotName = "";
+		String simRobotName = "";
 		Enumeration<URL> resources = null;
 		try {
 			resources = RobotBase.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
@@ -165,9 +167,12 @@ public abstract class RobotBase {
 				robotName = manifest.getMainAttributes().getValue("Robot-Class");
 			} catch (IOException e) {e.printStackTrace();}
 		}
+		System.out.println("Robot name: " + robotName);
+		simRobotName = "com.team254.frc2015.sim.SimRobot";
+		System.out.println("Sim Robot name: " + simRobotName);
 
 		RobotBase robot;
-		System.out.println("Robot name: " + robotName);
+		
 		try {
 			robot = (RobotBase) Class.forName(robotName).newInstance();
 			robot.prestart();
@@ -178,6 +183,27 @@ public abstract class RobotBase {
 			System.exit(1);
 			return;
 		}
+		
+	    SimRobotBase simRobot;
+		try {
+			simRobot = (SimRobotBase) Class.forName(simRobotName).newInstance();
+			simRobot.prestart();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			System.err.println("WARNING: Robots don't quit!");
+			System.err.println("ERROR: Could not instantiate sim robot " + simRobotName + "!");
+			System.exit(1);
+			return;
+		}
+		
+		final SimRobotBase runnableSimRobot = simRobot;
+		
+		new Thread( new Runnable() {
+		    @Override
+		    public void run() {
+		    	runnableSimRobot.startRobotSim();
+		    }
+		}).start();
 		
 		System.out.println(robot);
 
