@@ -109,6 +109,12 @@ public class DriverStation implements RobotState.Interface {
     private void task() {
         int safetyCounter = 0;
         while (m_thread_keepalive) {
+        	try {
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         	synchronized (this) {
                 getData();
             }
@@ -137,8 +143,14 @@ public class DriverStation implements RobotState.Interface {
     /**
      * Wait for new data from the driver station.
      */
+    
     public void waitForData() {
-        waitForData(0);
+        try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
