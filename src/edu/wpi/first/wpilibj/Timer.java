@@ -48,7 +48,7 @@ public class Timer {
 	 */
 	public static void delay(final double seconds) {
 		try {
-			Thread.sleep((int)seconds * 1000);
+			Thread.sleep((int)(seconds * 1000));
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
