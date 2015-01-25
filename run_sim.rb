@@ -51,7 +51,7 @@ FileUtils.cp "META-INF/MANIFEST.MF.old", "META-INF/MANIFEST.MF"
 FileUtils.rm "META-INF/MANIFEST.MF.old"
 
 # Copy sim robot class files
-`cp -r #{ARGV[1]}/bin/ .`
+`cp -r #{cur_dir}/#{ARGV[1]}/bin/ .`
 
 # make test harness
 Dir.chdir('..')
