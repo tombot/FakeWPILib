@@ -54,14 +54,14 @@ public abstract class RobotBase {
 	 * @return If the robot is running in simulation.
 	 */
 	public static boolean isSimulation() {
-		return false;
+		return true;
 	}
 
 	/**
 	 * @return If the robot is running in the real world.
 	 */
 	public static boolean isReal() {
-		return true;
+		return false;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class RobotBase {
 	 * @return True if the Robot is currently disabled by the field controls.
 	 */
 	public boolean isDisabled() {
-		return true;
+		return m_ds.isDisabled();
 	}
 
 	/**
@@ -77,7 +77,7 @@ public abstract class RobotBase {
 	 * @return True if the Robot is currently enabled by the field controls.
 	 */
 	public boolean isEnabled() {
-		return false;
+		return m_ds.isEnabled();
 	}
 
 	/**
@@ -85,7 +85,7 @@ public abstract class RobotBase {
 	 * @return True if the robot is currently operating Autonomously as determined by the field controls.
 	 */
 	public boolean isAutonomous() {
-		return false;
+		return m_ds.isAutonomous();
 	}
 
 	/**
@@ -109,7 +109,7 @@ public abstract class RobotBase {
 	 * @return Has new data arrived over the network since the last time this function was called?
 	 */
 	public boolean isNewDataAvailable() {
-		return false;
+		return m_ds.isNewControlData();
 	}
 
 	/**

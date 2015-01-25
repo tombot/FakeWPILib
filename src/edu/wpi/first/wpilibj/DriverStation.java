@@ -9,6 +9,7 @@ package edu.wpi.first.wpilibj;
 import java.nio.IntBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 import edu.wpi.first.wpilibj.communication.HALControlWord;
@@ -21,6 +22,13 @@ import edu.wpi.first.wpilibj.hal.PowerJNI;
  */
 public class DriverStation implements RobotState.Interface {
 
+	private class NewData extends TimerTask {
+		@Override
+		public synchronized void run() {
+			m_newControlData = true;
+		}
+	}
+	
     /**
      * Number of Joystick Ports
      */
@@ -58,6 +66,7 @@ public class DriverStation implements RobotState.Interface {
     private short[][] m_joystickPOVs = new short[kJoystickPorts][FRCNetworkCommunicationsLibrary.kMaxJoystickPOVs];
     private HALJoystickButtons[] m_joystickButtons = new HALJoystickButtons[kJoystickPorts];
 
+    private java.util.Timer m_update_timer;
     private Thread m_thread;
     private final Object m_dataSem;
     private volatile boolean m_thread_keepalive = true;
@@ -66,6 +75,9 @@ public class DriverStation implements RobotState.Interface {
     private boolean m_userInTeleop = false;
     private boolean m_userInTest = false;
     private boolean m_newControlData;
+    
+    private boolean m_actuallyAutonomous = false;
+    private boolean m_actuallyDisabled = true;
 
 
     /**
@@ -94,6 +106,8 @@ public class DriverStation implements RobotState.Interface {
         m_thread.setPriority((Thread.NORM_PRIORITY + Thread.MAX_PRIORITY) / 2);
 
         m_thread.start();
+        m_update_timer = new java.util.Timer();
+        m_update_timer.scheduleAtFixedRate(new NewData(), 20L, 20L);
     }
 
     /**
@@ -346,6 +360,11 @@ public class DriverStation implements RobotState.Interface {
         
         return m_joystickButtons[stick].count;
     }
+    
+    public void setDSMode(boolean disabled, boolean autonomous) {
+    	m_actuallyDisabled = disabled;
+    	m_actuallyAutonomous = autonomous;
+    }
 
     /**
      * Gets a value indicating whether the Driver Station requires the
@@ -354,8 +373,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if the robot is enabled, false otherwise.
      */
     public boolean isEnabled() {
-		HALControlWord controlWord = FRCNetworkCommunicationsLibrary.HALGetControlWord();
-        return controlWord.getEnabled() && controlWord.getDSAttached();
+    	return !m_actuallyDisabled;
     }
 
     /**
@@ -375,8 +393,7 @@ public class DriverStation implements RobotState.Interface {
      * @return True if autonomous mode should be enabled, false otherwise.
      */
     public boolean isAutonomous() {
-		HALControlWord controlWord = FRCNetworkCommunicationsLibrary.HALGetControlWord();
-        return controlWord.getAutonomous();
+		return m_actuallyAutonomous;
     }
 
     /**
