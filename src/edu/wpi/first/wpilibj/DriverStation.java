@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.communication.HALControlWord;
 import edu.wpi.first.wpilibj.communication.HALAllianceStationID;
 import edu.wpi.first.wpilibj.hal.HALUtil;
 import edu.wpi.first.wpilibj.hal.PowerJNI;
+import edu.wpi.first.wpilibj.ui.DriverStationGUI;
 
 /**
  * Provide access to the network communication data to / from the Driver Station.
@@ -79,6 +80,7 @@ public class DriverStation implements RobotState.Interface {
     private boolean m_actuallyAutonomous = false;
     private boolean m_actuallyDisabled = true;
 
+    private DriverStationGUI m_dsGUI;
 
     /**
      * Gets an instance of the DriverStation
@@ -108,6 +110,8 @@ public class DriverStation implements RobotState.Interface {
         m_thread.start();
         m_update_timer = new java.util.Timer();
         m_update_timer.scheduleAtFixedRate(new NewData(), 20L, 20L);
+        m_dsGUI = new DriverStationGUI(this);
+        m_dsGUI.start();
     }
 
     /**

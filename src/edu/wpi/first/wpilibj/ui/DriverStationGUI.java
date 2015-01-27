@@ -16,6 +16,10 @@ public class DriverStationGUI extends javax.swing.JFrame {
 		System.out.println("thing: " + m_ds);
 		return m_ds == null ? "Not connected"  : m_ds.isDisabled() ? "Disabled" : m_ds.isAutonomous() ? "Autonomous" : "Teleop";
 	}
+	
+	private void renderMode() {
+		modeLabel.setText(modeText());
+	}
 
 	// desc=" Generated Code ">//GEN-BEGIN:initComponents
 	private void initComponents() {
@@ -36,24 +40,25 @@ public class DriverStationGUI extends javax.swing.JFrame {
 		disableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				m_ds.setDSMode(true, false);
+				renderMode();
 			}
 		});
 		
 		teleopButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				m_ds.setDSMode(false, false);
+				renderMode();
 			}
 		});
 		
 		autoButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				m_ds.setDSMode(false, true);
+				renderMode();
 			}
 		});
 
-		modeLabel.setText(modeText());
-		
-		
+		renderMode();
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(
 				getContentPane());
