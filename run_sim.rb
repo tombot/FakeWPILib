@@ -9,6 +9,7 @@ abort "Error: Sim Robot code doesn't exist in project #{ARGV[0]}" unless has_sim
 abort "Error: Ant not found. Try installing with 'brew install ant'." unless find_executable 'ant'
 
 cur_dir = Dir.pwd
+has_sim = ARGV[1] != ".."
 
 # compile robot code
 Dir.chdir(ARGV[0])
@@ -19,11 +20,11 @@ Dir.chdir(cur_dir)
 system('ant jar')
 
 # move fake wpi lib jar to sim robot dir
-FileUtils.cp(cur_dir + "/dist/FakeWPILib.jar", ARGV[1] + "/lib/")
+FileUtils.cp(cur_dir + "/dist/FakeWPILib.jar", ARGV[1] + "/lib/") if has_sim
 
 # compile sim robot
 Dir.chdir(ARGV[1])
-system('ant compile')
+system('ant compile') if has_sim
 
 Dir.chdir(cur_dir)
 
@@ -51,7 +52,7 @@ FileUtils.cp "META-INF/MANIFEST.MF.old", "META-INF/MANIFEST.MF"
 FileUtils.rm "META-INF/MANIFEST.MF.old"
 
 # Copy sim robot class files
-`cp -r #{cur_dir}/#{ARGV[1]}/bin/ .`
+`cp -r #{cur_dir}/#{ARGV[1]}/bin/ .` if has_sim
 
 # make test harness
 Dir.chdir('..')
