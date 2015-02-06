@@ -24,201 +24,201 @@ import com.team254.fakewpilib.SimRobotBase;
  * might be spawned as a task, then killed at the end of the Autonomous period.
  */
 public abstract class RobotBase {
-	/**
-	 * The VxWorks priority that robot code should work at (so Java code should run at)
-	 */
-	public static final int ROBOT_TASK_PRIORITY = 101;
+    /**
+     * The VxWorks priority that robot code should work at (so Java code should run at)
+     */
+    public static final int ROBOT_TASK_PRIORITY = 101;
 
-	protected final DriverStation m_ds;
+    protected final DriverStation m_ds;
 
 
-	/**
-	 * Constructor for a generic robot program.
-	 * User code should be placed in the constructor that runs before the Autonomous or Operator
-	 * Control period starts. The constructor will run to completion before Autonomous is entered.
-	 *
-	 * This must be used to ensure that the communications code starts. In the future it would be
-	 * nice to put this code into it's own task that loads on boot so ensure that it runs.
-	 */
-	protected RobotBase() {
-		m_ds = DriverStation.getInstance();		
-	}
+    /**
+     * Constructor for a generic robot program.
+     * User code should be placed in the constructor that runs before the Autonomous or Operator
+     * Control period starts. The constructor will run to completion before Autonomous is entered.
+     *
+     * This must be used to ensure that the communications code starts. In the future it would be
+     * nice to put this code into it's own task that loads on boot so ensure that it runs.
+     */
+    protected RobotBase() {
+        m_ds = DriverStation.getInstance();		
+    }
 
-	/**
-	 * Free the resources for a RobotBase class.
-	 */
-	public void free() {
-	}
+    /**
+     * Free the resources for a RobotBase class.
+     */
+    public void free() {
+    }
 
-	/**
-	 * @return If the robot is running in simulation.
-	 */
-	public static boolean isSimulation() {
-		return true;
-	}
+    /**
+     * @return If the robot is running in simulation.
+     */
+    public static boolean isSimulation() {
+        return true;
+    }
 
-	/**
-	 * @return If the robot is running in the real world.
-	 */
-	public static boolean isReal() {
-		return false;
-	}
+    /**
+     * @return If the robot is running in the real world.
+     */
+    public static boolean isReal() {
+        return false;
+    }
 
-	/**
-	 * Determine if the Robot is currently disabled.
-	 * @return True if the Robot is currently disabled by the field controls.
-	 */
-	public boolean isDisabled() {
-		return m_ds.isDisabled();
-	}
+    /**
+     * Determine if the Robot is currently disabled.
+     * @return True if the Robot is currently disabled by the field controls.
+     */
+    public boolean isDisabled() {
+        return m_ds.isDisabled();
+    }
 
-	/**
-	 * Determine if the Robot is currently enabled.
-	 * @return True if the Robot is currently enabled by the field controls.
-	 */
-	public boolean isEnabled() {
-		return m_ds.isEnabled();
-	}
+    /**
+     * Determine if the Robot is currently enabled.
+     * @return True if the Robot is currently enabled by the field controls.
+     */
+    public boolean isEnabled() {
+        return m_ds.isEnabled();
+    }
 
-	/**
-	 * Determine if the robot is currently in Autonomous mode.
-	 * @return True if the robot is currently operating Autonomously as determined by the field controls.
-	 */
-	public boolean isAutonomous() {
-		return m_ds.isAutonomous();
-	}
+    /**
+     * Determine if the robot is currently in Autonomous mode.
+     * @return True if the robot is currently operating Autonomously as determined by the field controls.
+     */
+    public boolean isAutonomous() {
+        return m_ds.isAutonomous();
+    }
 
-	/**
-	 * Determine if the robot is currently in Test mode
-	 * @return True if the robot is currently operating in Test mode as determined by the driver station.
-	 */
-	public boolean isTest() {
-		return false;
-	}
+    /**
+     * Determine if the robot is currently in Test mode
+     * @return True if the robot is currently operating in Test mode as determined by the driver station.
+     */
+    public boolean isTest() {
+        return m_ds.isTest();
+    }
 
-	/**
-	 * Determine if the robot is currently in Operator Control mode.
-	 * @return True if the robot is currently operating in Tele-Op mode as determined by the field controls.
-	 */
-	public boolean isOperatorControl() {
-		return false;
-	}
+    /**
+     * Determine if the robot is currently in Operator Control mode.
+     * @return True if the robot is currently operating in Tele-Op mode as determined by the field controls.
+     */
+    public boolean isOperatorControl() {
+        return m_ds.isOperatorControl();
+    }
 
-	/**
-	 * Indicates if new data is available from the driver station.
-	 * @return Has new data arrived over the network since the last time this function was called?
-	 */
-	public boolean isNewDataAvailable() {
-		return m_ds.isNewControlData();
-	}
+    /**
+     * Indicates if new data is available from the driver station.
+     * @return Has new data arrived over the network since the last time this function was called?
+     */
+    public boolean isNewDataAvailable() {
+        return m_ds.isNewControlData();
+    }
 
-	/**
-	 * Provide an alternate "main loop" via startCompetition().
-	 */
-	public abstract void startCompetition();
+    /**
+     * Provide an alternate "main loop" via startCompetition().
+     */
+    public abstract void startCompetition();
 
-	/**
-	 * This hook is called right before startCompetition(). By default, tell the
-	 * DS that the robot is now ready to be enabled. If you don't want for the
-	 * robot to be enabled yet, you can override this method to do nothing.
-	 * If you do so, you will need to call 
-	 * FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationOvserveUserProgramStarting() from
-	 * your code when you are ready for the robot to be enabled.
-	 */
-	protected void prestart() {
-	}
+    /**
+     * This hook is called right before startCompetition(). By default, tell the
+     * DS that the robot is now ready to be enabled. If you don't want for the
+     * robot to be enabled yet, you can override this method to do nothing.
+     * If you do so, you will need to call 
+     * FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationOvserveUserProgramStarting() from
+     * your code when you are ready for the robot to be enabled.
+     */
+    protected void prestart() {
+    }
 
-	public static boolean getBooleanProperty(String name, boolean defaultValue) {
-		String propVal = System.getProperty(name);
-		if (propVal == null) {
-			return defaultValue;
-		}
-		if (propVal.equalsIgnoreCase("false")) {
-			return false;
-		} else if (propVal.equalsIgnoreCase("true")) {
-			return true;
-		} else {
-			throw new IllegalStateException(propVal);
-		}
-	}
+    public static boolean getBooleanProperty(String name, boolean defaultValue) {
+        String propVal = System.getProperty(name);
+        if (propVal == null) {
+            return defaultValue;
+        }
+        if (propVal.equalsIgnoreCase("false")) {
+            return false;
+        } else if (propVal.equalsIgnoreCase("true")) {
+            return true;
+        } else {
+            throw new IllegalStateException(propVal);
+        }
+    }
 
-	/**
-	 * Common initialization for all robot programs.
-	 */
-	public static void initializeHardwareConfiguration(){
-	
-	}
+    /**
+     * Common initialization for all robot programs.
+     */
+    public static void initializeHardwareConfiguration(){
 
-	/**
-	 * Starting point for the applications.
-	 */
-	public static void main(String args[]) {
-		initializeHardwareConfiguration();
+    }
 
-		String robotName = "";
-		String simRobotName = "";
-		Enumeration<URL> resources = null;
-		try {
-			resources = RobotBase.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
-		} catch (IOException e) {e.printStackTrace();}
-		while (resources != null && resources.hasMoreElements()) {
-			try {
-				Manifest manifest = new Manifest(resources.nextElement().openStream());
-				robotName = manifest.getMainAttributes().getValue("Robot-Class");
-			} catch (IOException e) {e.printStackTrace();}
-		}
-		System.out.println("Robot name: " + robotName);
-		simRobotName = "com.team254.frc2015.sim.SimRobot";
-		System.out.println("Sim Robot name: " + simRobotName);
+    /**
+     * Starting point for the applications.
+     */
+    public static void main(String args[]) {
+        initializeHardwareConfiguration();
 
-		RobotBase robot;
-		
-		try {
-			robot = (RobotBase) Class.forName(robotName).newInstance();
-			robot.prestart();
-		} catch (Throwable t) {
-			t.printStackTrace();
-			System.err.println("WARNING: Robots don't quit!");
-			System.err.println("ERROR: Could not instantiate robot " + robotName + "!");
-			System.exit(1);
-			return;
-		}
-		
-	    SimRobotBase simRobot;
-		try {
-			simRobot = (SimRobotBase) Class.forName(simRobotName).newInstance();
-			simRobot.prestart();
-			final SimRobotBase runnableSimRobot = simRobot;
-			
-			new Thread( new Runnable() {
-			    @Override
-			    public void run() {
-			    	runnableSimRobot.startRobotSim();
-			    }
-			}).start();
-			
-		} catch (Throwable t) {
-			t.printStackTrace();
-			System.err.println("WARNING: Robots don't quit!");
-			System.err.println("ERROR: Could not instantiate sim robot " + simRobotName + "!");
-		}
+        String robotName = "";
+        String simRobotName = "";
+        Enumeration<URL> resources = null;
+        try {
+            resources = RobotBase.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+        } catch (IOException e) {e.printStackTrace();}
+        while (resources != null && resources.hasMoreElements()) {
+            try {
+                Manifest manifest = new Manifest(resources.nextElement().openStream());
+                robotName = manifest.getMainAttributes().getValue("Robot-Class");
+            } catch (IOException e) {e.printStackTrace();}
+        }
+        System.out.println("Robot name: " + robotName);
+        simRobotName = "com.team254.frc2015.sim.SimRobot";
+        System.out.println("Sim Robot name: " + simRobotName);
 
-		boolean errorOnExit = false;
-		try {
-			robot.startCompetition();
-		} catch (Throwable t) {
-			System.out.println("oops");
-			t.printStackTrace();
-			errorOnExit = true;
-		} finally {
-			// startCompetition never returns unless exception occurs....
-			System.err.println("WARNING: Robots don't quit!");
-			if (errorOnExit) {
-				System.err.println("---> The startCompetition() method (or methods called by it) should have handled the exception above.");
-			} else {
-				System.err.println("---> Unexpected return from startCompetition() method.");
-			}
-		}
-		System.exit(1);
-	}
+        RobotBase robot;
+
+        try {
+            robot = (RobotBase) Class.forName(robotName).newInstance();
+            robot.prestart();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.err.println("WARNING: Robots don't quit!");
+            System.err.println("ERROR: Could not instantiate robot " + robotName + "!");
+            System.exit(1);
+            return;
+        }
+
+        SimRobotBase simRobot;
+        try {
+            simRobot = (SimRobotBase) Class.forName(simRobotName).newInstance();
+            simRobot.prestart();
+            final SimRobotBase runnableSimRobot = simRobot;
+
+            new Thread( new Runnable() {
+                @Override
+                public void run() {
+                    runnableSimRobot.startRobotSim();
+                }
+            }).start();
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.err.println("WARNING: Robots don't quit!");
+            System.err.println("ERROR: Could not instantiate sim robot " + simRobotName + "!");
+        }
+
+        boolean errorOnExit = false;
+        try {
+            robot.startCompetition();
+        } catch (Throwable t) {
+            System.out.println("oops");
+            t.printStackTrace();
+            errorOnExit = true;
+        } finally {
+            // startCompetition never returns unless exception occurs....
+            System.err.println("WARNING: Robots don't quit!");
+            if (errorOnExit) {
+                System.err.println("---> The startCompetition() method (or methods called by it) should have handled the exception above.");
+            } else {
+                System.err.println("---> Unexpected return from startCompetition() method.");
+            }
+        }
+        System.exit(1);
+    }
 }
