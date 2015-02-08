@@ -21,6 +21,7 @@ system('ant jar')
 
 # move fake wpi lib jar to sim robot dir
 FileUtils.cp(cur_dir + "/dist/FakeWPILib.jar", ARGV[1] + "/lib/") if has_sim
+FileUtils.cp(ARGV[0]+ "/dist/FRCUserProgram.jar", ARGV[1] + "/lib/") if has_sim
 
 # compile sim robot
 Dir.chdir(ARGV[1])
