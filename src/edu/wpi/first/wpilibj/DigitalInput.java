@@ -9,7 +9,6 @@ package edu.wpi.first.wpilibj;
 
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
-
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -22,8 +21,6 @@ import edu.wpi.first.wpilibj.tables.ITable;
  * switches etc. that aren't implemented anywhere else.
  */
 public class DigitalInput extends DigitalSource implements LiveWindowSendable {
-
-	private boolean m_value;
 	/**
 	 * Create an instance of a Digital Input class. Creates a digital input
 	 * given a channel.
@@ -37,18 +34,9 @@ public class DigitalInput extends DigitalSource implements LiveWindowSendable {
         UsageReporting.report(tResourceType.kResourceType_DigitalInput, channel);
 	}
 
-	/**
-	 * Get the value from a digital input channel. Retrieve the value of a
-	 * single digital input channel from the FPGA.
-	 *
-	 * @return the status of the digital input
-	 */
-	public boolean get() {
-		return m_value;
-	}
 	
-	public void set(boolean v) {
-		m_value = v;
+	private static DigitalInput getSimSource(int channel) {
+		return (DigitalInput) sources[channel];
 	}
 
 	/**
