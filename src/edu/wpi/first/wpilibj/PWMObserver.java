@@ -2,6 +2,7 @@ package edu.wpi.first.wpilibj;
 
 public class PWMObserver {
 	private int channel;
+	private boolean inverted = false;
 	public PWMObserver(int channel) {
 		this.channel = channel;
 	}
@@ -12,11 +13,15 @@ public class PWMObserver {
 		PWM temp = PWMStore.getPWM(channel);
 		
 		if (temp != null) {
-			ret = temp.getSpeed();
+			ret = temp.getSpeed() * (inverted ? -1.0 : 1.0);
 		}
 		
 		return ret;
 		
+	}
+	
+	public void setInvertedMotor(boolean inverted) {
+		this.inverted = inverted;
 	}
 	
 	public boolean exists() {

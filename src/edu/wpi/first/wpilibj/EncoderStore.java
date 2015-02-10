@@ -6,7 +6,7 @@ public class EncoderStore {
 	static ArrayList<Encoder> encoders = new ArrayList<Encoder>();
 	
 	static {
-		while(encoders.size() < 10) encoders.add(null);
+		while(encoders.size() < 20) encoders.add(null);
 	}
 
 	public static Encoder getEncoder(int a, int b) {
