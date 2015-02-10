@@ -10,6 +10,10 @@ public class PWMObserver {
 	public double get() {
 		double ret = 0;
 		
+		if (!DriverStation.getInstance().isEnabled()) {
+			return 0;
+		}
+
 		PWM temp = PWMStore.getPWM(channel);
 		
 		if (temp != null) {
