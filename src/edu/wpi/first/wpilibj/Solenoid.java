@@ -27,7 +27,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
      * Common function to implement constructor behavior.
      */
 	private synchronized void initSolenoid(final int channel) {
-		checkSolenoidChannel(channel);
+		//checkSolenoidChannel(channel);
 		System.out.println("trying to init solenoid " + channel);
 		if (SolenoidStore.exists(channel)) {
 			throw new RuntimeException("There is already a solenoid assigned on channel " + channel);
@@ -54,7 +54,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
      */
     public Solenoid(final int moduleNumber, final int channel) {
         m_channel = channel;
-        initSolenoid((moduleNumber + 1) * channel);
+        initSolenoid((moduleNumber * 7) + channel);
     }
 
     /**
