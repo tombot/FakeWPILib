@@ -16,6 +16,10 @@ public class GyroThread {
         return 0;
     }
 
+    public double getRate() {
+        return 0;
+    }
+
     public void rezero() {}
 
 }
