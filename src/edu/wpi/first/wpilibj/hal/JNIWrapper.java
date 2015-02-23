@@ -6,10 +6,11 @@ import java.nio.ByteBuffer;
 //
 // base class for all JNI wrappers
 //
-public class JNIWrapper
-{
-	static boolean libraryLoaded = false;
-	static File jniLibrary = null;
-	public static native ByteBuffer getPortWithModule(byte module, byte pin);
-	public static native ByteBuffer getPort(byte pin);
+public class JNIWrapper {
+    static boolean libraryLoaded = false;
+    static File jniLibrary = null;
+
+    public static native ByteBuffer getPortWithModule(byte module, byte pin);
+
+    public static native ByteBuffer getPort(byte pin);
 }

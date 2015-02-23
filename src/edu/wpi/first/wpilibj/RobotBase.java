@@ -7,12 +7,12 @@
 
 package edu.wpi.first.wpilibj;
 
+import com.team254.fakewpilib.SimRobotBase;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.Manifest;
-
-import com.team254.fakewpilib.SimRobotBase;
 
 
 /**
@@ -36,12 +36,12 @@ public abstract class RobotBase {
      * Constructor for a generic robot program.
      * User code should be placed in the constructor that runs before the Autonomous or Operator
      * Control period starts. The constructor will run to completion before Autonomous is entered.
-     *
+     * <p/>
      * This must be used to ensure that the communications code starts. In the future it would be
      * nice to put this code into it's own task that loads on boot so ensure that it runs.
      */
     protected RobotBase() {
-        m_ds = DriverStation.getInstance();		
+        m_ds = DriverStation.getInstance();
     }
 
     /**
@@ -66,6 +66,7 @@ public abstract class RobotBase {
 
     /**
      * Determine if the Robot is currently disabled.
+     *
      * @return True if the Robot is currently disabled by the field controls.
      */
     public boolean isDisabled() {
@@ -74,6 +75,7 @@ public abstract class RobotBase {
 
     /**
      * Determine if the Robot is currently enabled.
+     *
      * @return True if the Robot is currently enabled by the field controls.
      */
     public boolean isEnabled() {
@@ -82,6 +84,7 @@ public abstract class RobotBase {
 
     /**
      * Determine if the robot is currently in Autonomous mode.
+     *
      * @return True if the robot is currently operating Autonomously as determined by the field controls.
      */
     public boolean isAutonomous() {
@@ -90,6 +93,7 @@ public abstract class RobotBase {
 
     /**
      * Determine if the robot is currently in Test mode
+     *
      * @return True if the robot is currently operating in Test mode as determined by the driver station.
      */
     public boolean isTest() {
@@ -98,6 +102,7 @@ public abstract class RobotBase {
 
     /**
      * Determine if the robot is currently in Operator Control mode.
+     *
      * @return True if the robot is currently operating in Tele-Op mode as determined by the field controls.
      */
     public boolean isOperatorControl() {
@@ -106,6 +111,7 @@ public abstract class RobotBase {
 
     /**
      * Indicates if new data is available from the driver station.
+     *
      * @return Has new data arrived over the network since the last time this function was called?
      */
     public boolean isNewDataAvailable() {
@@ -121,7 +127,7 @@ public abstract class RobotBase {
      * This hook is called right before startCompetition(). By default, tell the
      * DS that the robot is now ready to be enabled. If you don't want for the
      * robot to be enabled yet, you can override this method to do nothing.
-     * If you do so, you will need to call 
+     * If you do so, you will need to call
      * FRCNetworkCommunicationsLibrary.FRCNetworkCommunicationOvserveUserProgramStarting() from
      * your code when you are ready for the robot to be enabled.
      */
@@ -145,7 +151,7 @@ public abstract class RobotBase {
     /**
      * Common initialization for all robot programs.
      */
-    public static void initializeHardwareConfiguration(){
+    public static void initializeHardwareConfiguration() {
 
     }
 
@@ -160,12 +166,16 @@ public abstract class RobotBase {
         Enumeration<URL> resources = null;
         try {
             resources = RobotBase.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while (resources != null && resources.hasMoreElements()) {
             try {
                 Manifest manifest = new Manifest(resources.nextElement().openStream());
                 robotName = manifest.getMainAttributes().getValue("Robot-Class");
-            } catch (IOException e) {e.printStackTrace();}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("Robot name: " + robotName);
         simRobotName = "com.team254.frc2015.sim.SimRobot";
@@ -190,7 +200,7 @@ public abstract class RobotBase {
             simRobot.prestart();
             final SimRobotBase runnableSimRobot = simRobot;
 
-            new Thread( new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     runnableSimRobot.startRobotSim();

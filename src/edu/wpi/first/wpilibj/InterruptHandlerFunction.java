@@ -10,48 +10,51 @@ import edu.wpi.first.wpilibj.hal.InterruptJNI.InterruptJNIHandlerFunction;
 
 
 /**
- * It is recommended that you use this class in conjunction with classes from 
+ * It is recommended that you use this class in conjunction with classes from
  * {@link java.util.concurrent.atomic} as these objects are all thread safe.
- * 
- * @author Jonathan Leitschuh
  *
  * @param <T> The type of the parameter that should be returned to the the
- *  method {@link #interruptFired(int, Object)}
+ *            method {@link #interruptFired(int, Object)}
+ * @author Jonathan Leitschuh
  */
-public abstract class InterruptHandlerFunction<T>{
-	/**
-	 * The entry point for the interrupt. When the interrupt fires the
-	 * {@link #apply(int, Object)} method is called.
-	 * The outer class is provided as an interface to allow the implementer to
-	 * pass a generic object to the interrupt fired method.
-	 * @author Jonathan Leitschuh
-	 */
-	public class Function implements InterruptJNIHandlerFunction{
-		@SuppressWarnings("unchecked")
-		@Override
-		public void apply(int interruptAssertedMask, Object param) {
-			interruptFired(interruptAssertedMask, (T)param);
-		}
-	}
-	final public Function function = new Function();
-	
-	/**
-	 * This method is run every time an interrupt is fired.
-	 * @param interruptAssertedMask
-	 * @param param The parameter provided by overriding the {@link #overridableParamater()}
-	 * method. 
-	 */
-	abstract void interruptFired(int interruptAssertedMask, T param);
-	
-	
-	/**
-	 * Override this method if you would like to pass a specific
-	 * parameter to the {@link #interruptFired(int, Object)} when it is fired by the interrupt.
-	 * This method is called once when {@link InterruptableSensorBase#requestInterrupts(InterruptHandlerFunction)}
-	 * is run.
-	 * @return The object that should be passed to the interrupt when it runs
-	 */
-	public T overridableParamater(){
-		return null;
-	}
+public abstract class InterruptHandlerFunction<T> {
+    /**
+     * The entry point for the interrupt. When the interrupt fires the
+     * {@link #apply(int, Object)} method is called.
+     * The outer class is provided as an interface to allow the implementer to
+     * pass a generic object to the interrupt fired method.
+     *
+     * @author Jonathan Leitschuh
+     */
+    public class Function implements InterruptJNIHandlerFunction {
+        @SuppressWarnings("unchecked")
+        @Override
+        public void apply(int interruptAssertedMask, Object param) {
+            interruptFired(interruptAssertedMask, (T) param);
+        }
+    }
+
+    final public Function function = new Function();
+
+    /**
+     * This method is run every time an interrupt is fired.
+     *
+     * @param interruptAssertedMask
+     * @param param                 The parameter provided by overriding the {@link #overridableParamater()}
+     *                              method.
+     */
+    abstract void interruptFired(int interruptAssertedMask, T param);
+
+
+    /**
+     * Override this method if you would like to pass a specific
+     * parameter to the {@link #interruptFired(int, Object)} when it is fired by the interrupt.
+     * This method is called once when {@link InterruptableSensorBase#requestInterrupts(InterruptHandlerFunction)}
+     * is run.
+     *
+     * @return The object that should be passed to the interrupt when it runs
+     */
+    public T overridableParamater() {
+        return null;
+    }
 }

@@ -6,7 +6,8 @@ package com.team254.lib.util.gyro;
  * copied over to the simulation binary directory.
  */
 public class GyroThread {
-    public void start() {}
+    public void start() {
+    }
 
     public boolean hasData() {
         return true;
@@ -20,8 +21,10 @@ public class GyroThread {
         return 0;
     }
 
-    public void rezero() {}
-    
-    public void reset() {}
+    public void rezero() {
+    }
+
+    public void reset() {
+    }
 
 }

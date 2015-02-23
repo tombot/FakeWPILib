@@ -6,7 +6,9 @@ public class DriverStationGUI extends javax.swing.JFrame {
 
     DriverStation m_ds;
 
-    /** Creates new form CelsiusConverterGUI */
+    /**
+     * Creates new form CelsiusConverterGUI
+     */
     public DriverStationGUI(DriverStation ds) {
         m_ds = ds;
         initComponents();
@@ -15,9 +17,9 @@ public class DriverStationGUI extends javax.swing.JFrame {
     public String modeText() {
         System.out.println("thing: " + m_ds);
         return m_ds == null ? "Not connected" :
-            m_ds.isDisabled() ? "Disabled" :
-                m_ds.isAutonomous() ? "Autonomous" :
-                    m_ds.isTest() ? "Test" : "Teleop";
+                m_ds.isDisabled() ? "Disabled" :
+                        m_ds.isAutonomous() ? "Autonomous" :
+                                m_ds.isTest() ? "Test" : "Teleop";
     }
 
     private void renderMode() {
@@ -91,8 +93,8 @@ public class DriverStationGUI extends javax.swing.JFrame {
                 .addComponent(teleopButton)
                 .addComponent(autoButton)
                 .addComponent(testButton));
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] { autoButton });
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] { autoButton });
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[]{autoButton});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[]{autoButton});
         pack();
     }
 

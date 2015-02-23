@@ -13,28 +13,28 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
 
 /**
  * Solenoid class for running high voltage Digital Output.
- *
+ * <p/>
  * The Solenoid class is typically used for pneumatics solenoids, but could be used
  * for any device within the current spec of the PCM.
  */
 public class Solenoid extends SolenoidBase implements LiveWindowSendable {
-	
+
     private int m_channel; ///< The channel to control.
     boolean m_value = false;
-    
+
 
     /**
      * Common function to implement constructor behavior.
      */
-	private synchronized void initSolenoid(final int channel) {
-		//checkSolenoidChannel(channel);
-		System.out.println("trying to init solenoid " + channel);
-		if (SolenoidStore.exists(channel)) {
-			throw new RuntimeException("There is already a solenoid assigned on channel " + channel);
-		} else {
-			SolenoidStore.initSolenoid(channel, this);
-		}
-	}
+    private synchronized void initSolenoid(final int channel) {
+        //checkSolenoidChannel(channel);
+        System.out.println("trying to init solenoid " + channel);
+        if (SolenoidStore.exists(channel)) {
+            throw new RuntimeException("There is already a solenoid assigned on channel " + channel);
+        } else {
+            SolenoidStore.initSolenoid(channel, this);
+        }
+    }
 
     /**
      * Constructor using the default PCM ID (0)
@@ -50,7 +50,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
      * Constructor.
      *
      * @param moduleNumber The CAN ID of the PCM the solenoid is attached to.
-     * @param channel The channel on the PCM to control (0..7).
+     * @param channel      The channel on the PCM to control (0..7).
      */
     public Solenoid(final int moduleNumber, final int channel) {
         m_channel = channel;
@@ -61,7 +61,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
      * Destructor.
      */
     public synchronized void free() {
-  //      m_allocated.free((m_moduleNumber - 1) * kSolenoidChannels + m_channel - 1);
+        //      m_allocated.free((m_moduleNumber - 1) * kSolenoidChannels + m_channel - 1);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
      * @param on Turn the solenoid output off or on.
      */
     public void set(boolean on) {
-    	m_value = on;
+        m_value = on;
     }
 
     /**
@@ -81,24 +81,27 @@ public class Solenoid extends SolenoidBase implements LiveWindowSendable {
     public boolean get() {
         return m_value;
     }
-	/**
-	 * Check if solenoid is blacklisted.
-	 *		If a solenoid is shorted, it is added to the blacklist and
-	 *		disabled until power cycle, or until faults are cleared.
-	 *		@see clearAllPCMStickyFaults()
-	 *
-	 * @return If solenoid is disabled due to short.
-	 */
-	public boolean isBlackListed() {
-		assert(false);  // not implemented
-		return false;
-	}
+
+    /**
+     * Check if solenoid is blacklisted.
+     * If a solenoid is shorted, it is added to the blacklist and
+     * disabled until power cycle, or until faults are cleared.
+     *
+     * @return If solenoid is disabled due to short.
+     * @see clearAllPCMStickyFaults()
+     */
+    public boolean isBlackListed() {
+        assert (false);  // not implemented
+        return false;
+    }
+
     /*
      * Live Window code, only does anything if live window is activated.
      */
     public String getSmartDashboardType() {
         return "Solenoid";
     }
+
     private ITable m_table;
     private ITableListener m_table_listener;
 

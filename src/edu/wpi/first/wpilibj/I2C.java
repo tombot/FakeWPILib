@@ -6,249 +6,228 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj;
 
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.ByteBuffer;
-
-
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
-
 import edu.wpi.first.wpilibj.util.BoundaryException;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * I2C bus interface class.
- *
+ * <p/>
  * This class is intended to be used by sensor (and other I2C device) drivers.
  * It probably should not be used directly.
- *
  */
 public class I2C extends SensorBase {
-	public enum Port {kOnboard(0), kMXP(1);
-		private int value;
+    public enum Port {
+        kOnboard(0), kMXP(1);
+        private int value;
 
-		private Port(int value){
-			this.value = value;
-		}
+        private Port(int value) {
+            this.value = value;
+        }
 
-		public int getValue(){
-			return this.value;
-		}
-	};
-	
-	private static I2C[] ports = new I2C[2];
-	
-	private Port m_port;
-	private int m_deviceAddress;
+        public int getValue() {
+            return this.value;
+        }
+    }
+
+    ;
+
+    private static I2C[] ports = new I2C[2];
+
+    private Port m_port;
+    private int m_deviceAddress;
 
     /**
      * Constructor.
      *
-	 * @param port The I2C port the device is connected to.
-     * @param deviceAddress
-     *            The address of the device on the I2C bus.
+     * @param port          The I2C port the device is connected to.
+     * @param deviceAddress The address of the device on the I2C bus.
      */
     public I2C(Port port, int deviceAddress) {
-		ByteBuffer status = ByteBuffer.allocateDirect(4);
-		status.order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer status = ByteBuffer.allocateDirect(4);
+        status.order(ByteOrder.LITTLE_ENDIAN);
 
         m_port = port;
         m_deviceAddress = deviceAddress;
 
-		ports[port.value] = this;
+        ports[port.value] = this;
 
         UsageReporting.report(tResourceType.kResourceType_I2C, deviceAddress);
     }
 
-	/**
-	 * Destructor.
-	 */
-	public void free() {
-	}
+    /**
+     * Destructor.
+     */
+    public void free() {
+    }
 
-	/**
-	 * Generic transaction.
-	 *
-	 * This is a lower-level interface to the I2C hardware giving you more
-	 * control over each transaction.
-	 *
-	 * @param dataToSend
-	 *            Buffer of data to send as part of the transaction.
-	 * @param sendSize
-	 *            Number of bytes to send as part of the transaction. [0..6]
-	 * @param dataReceived
-	 *            Buffer to read data into.
-	 * @param receiveSize
-	 *            Number of bytes to read from the device. [0..7]
-	 * @return Transfer Aborted... false for success, true for aborted.
-	 */
-	public synchronized boolean transaction(byte[] dataToSend, int sendSize,
-			byte[] dataReceived, int receiveSize) {
-		boolean aborted = true;
+    /**
+     * Generic transaction.
+     * <p/>
+     * This is a lower-level interface to the I2C hardware giving you more
+     * control over each transaction.
+     *
+     * @param dataToSend   Buffer of data to send as part of the transaction.
+     * @param sendSize     Number of bytes to send as part of the transaction. [0..6]
+     * @param dataReceived Buffer to read data into.
+     * @param receiveSize  Number of bytes to read from the device. [0..7]
+     * @return Transfer Aborted... false for success, true for aborted.
+     */
+    public synchronized boolean transaction(byte[] dataToSend, int sendSize,
+                                            byte[] dataReceived, int receiveSize) {
+        boolean aborted = true;
 
-		ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(sendSize);
-		dataToSendBuffer.put(dataToSend);
-		ByteBuffer dataReceivedBuffer = ByteBuffer.allocateDirect(receiveSize);
+        ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(sendSize);
+        dataToSendBuffer.put(dataToSend);
+        ByteBuffer dataReceivedBuffer = ByteBuffer.allocateDirect(receiveSize);
 
-		if(receiveSize > 0 && dataReceived != null)
-		{
-			dataReceivedBuffer.get(dataReceived);
-		}
-		return aborted;
-	}
+        if (receiveSize > 0 && dataReceived != null) {
+            dataReceivedBuffer.get(dataReceived);
+        }
+        return aborted;
+    }
 
-	/**
-	 * Attempt to address a device on the I2C bus.
-	 *
-	 * This allows you to figure out if there is a device on the I2C bus that
-	 * responds to the address specified in the constructor.
-	 *
-	 * @return Transfer Aborted... false for success, true for aborted.
-	 */
-	public boolean addressOnly() {
-		return transaction(null, (byte) 0, null, (byte) 0);
-	}
+    /**
+     * Attempt to address a device on the I2C bus.
+     * <p/>
+     * This allows you to figure out if there is a device on the I2C bus that
+     * responds to the address specified in the constructor.
+     *
+     * @return Transfer Aborted... false for success, true for aborted.
+     */
+    public boolean addressOnly() {
+        return transaction(null, (byte) 0, null, (byte) 0);
+    }
 
-	/**
-	 * Execute a write transaction with the device.
-	 *
-	 * Write a single byte to a register on a device and wait until the
-	 * transaction is complete.
-	 *
-	 * @param registerAddress
-	 *            The address of the register on the device to be written.
-	 * @param data
-	 *            The byte to write to the register on the device.
-	 */
-	public synchronized boolean write(int registerAddress, int data) {
-		byte[] buffer = new byte[2];
-		buffer[0] = (byte) registerAddress;
-		buffer[1] = (byte) data;
+    /**
+     * Execute a write transaction with the device.
+     * <p/>
+     * Write a single byte to a register on a device and wait until the
+     * transaction is complete.
+     *
+     * @param registerAddress The address of the register on the device to be written.
+     * @param data            The byte to write to the register on the device.
+     */
+    public synchronized boolean write(int registerAddress, int data) {
+        byte[] buffer = new byte[2];
+        buffer[0] = (byte) registerAddress;
+        buffer[1] = (byte) data;
 
-		ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(2);
-		dataToSendBuffer.put(buffer);
+        ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(2);
+        dataToSendBuffer.put(buffer);
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Execute a write transaction with the device.
-	 *
-	 * Write multiple bytes to a register on a device and wait until the
-	 * transaction is complete.
-	 *
-	 * @param data
-	 *            The data to write to the device.
-	 */
-	public synchronized boolean writeBulk(byte[] data) {
-		ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(data.length);
-		dataToSendBuffer.put(data);
+    /**
+     * Execute a write transaction with the device.
+     * <p/>
+     * Write multiple bytes to a register on a device and wait until the
+     * transaction is complete.
+     *
+     * @param data The data to write to the device.
+     */
+    public synchronized boolean writeBulk(byte[] data) {
+        ByteBuffer dataToSendBuffer = ByteBuffer.allocateDirect(data.length);
+        dataToSendBuffer.put(data);
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Execute a read transaction with the device.
-	 *
-	 * Read 1 to 7 bytes from a device. Most I2C devices will auto-increment the
-	 * register pointer internally allowing you to read up to 7 consecutive
-	 * registers on a device in a single transaction.
-	 *
-	 * @param registerAddress
-	 *            The register to read first in the transaction.
-	 * @param count
-	 *            The number of bytes to read in the transaction. [1..7]
-	 * @param buffer
-	 *            A pointer to the array of bytes to store the data read from
-	 *            the device.
-	 * @return Transfer Aborted... false for success, true for aborted.
-	 */
-	public boolean read(int registerAddress, int count, byte[] buffer) {
-		BoundaryException.assertWithinBounds(count, 1, 7);
-		if (buffer == null) {
-			throw new NullPointerException("Null return buffer was given");
-		}
-		byte[] registerAddressArray = new byte[1];
-		registerAddressArray[0] = (byte) registerAddress;
+    /**
+     * Execute a read transaction with the device.
+     * <p/>
+     * Read 1 to 7 bytes from a device. Most I2C devices will auto-increment the
+     * register pointer internally allowing you to read up to 7 consecutive
+     * registers on a device in a single transaction.
+     *
+     * @param registerAddress The register to read first in the transaction.
+     * @param count           The number of bytes to read in the transaction. [1..7]
+     * @param buffer          A pointer to the array of bytes to store the data read from
+     *                        the device.
+     * @return Transfer Aborted... false for success, true for aborted.
+     */
+    public boolean read(int registerAddress, int count, byte[] buffer) {
+        BoundaryException.assertWithinBounds(count, 1, 7);
+        if (buffer == null) {
+            throw new NullPointerException("Null return buffer was given");
+        }
+        byte[] registerAddressArray = new byte[1];
+        registerAddressArray[0] = (byte) registerAddress;
 
-		return transaction(registerAddressArray, registerAddressArray.length,
-				buffer, count);
-	}
+        return transaction(registerAddressArray, registerAddressArray.length,
+                buffer, count);
+    }
 
-	/**
-	 * Execute a read only transaction with the device.
-	 *
-	 * Read 1 to 7 bytes from a device. This method does not write any data to prompt
-	 * the device.
-	 *
-	 * @param buffer
-	 *            A pointer to the array of bytes to store the data read from
-	 *            the device.
-	 * @param count
-	 *            The number of bytes to read in the transaction. [1..7]
-	 * @return Transfer Aborted... false for success, true for aborted.
-	 */
-	public boolean readOnly(byte[] buffer, int count) {
-		BoundaryException.assertWithinBounds(count, 1, 7);
-		if (buffer == null) {
-			throw new NullPointerException("Null return buffer was given");
-		}
+    /**
+     * Execute a read only transaction with the device.
+     * <p/>
+     * Read 1 to 7 bytes from a device. This method does not write any data to prompt
+     * the device.
+     *
+     * @param buffer A pointer to the array of bytes to store the data read from
+     *               the device.
+     * @param count  The number of bytes to read in the transaction. [1..7]
+     * @return Transfer Aborted... false for success, true for aborted.
+     */
+    public boolean readOnly(byte[] buffer, int count) {
+        BoundaryException.assertWithinBounds(count, 1, 7);
+        if (buffer == null) {
+            throw new NullPointerException("Null return buffer was given");
+        }
 
-		ByteBuffer dataReceivedBuffer = ByteBuffer.allocateDirect(count);
+        ByteBuffer dataReceivedBuffer = ByteBuffer.allocateDirect(count);
 
-		int retVal = 0;
-		dataReceivedBuffer.get(buffer);
-		return retVal < 0;
-	}
+        int retVal = 0;
+        dataReceivedBuffer.get(buffer);
+        return retVal < 0;
+    }
 
-	/**
-	 * Send a broadcast write to all devices on the I2C bus.
-	 *
-	 * This is not currently implemented!
-	 *
-	 * @param registerAddress
-	 *            The register to write on all devices on the bus.
-	 * @param data
-	 *            The value to write to the devices.
-	 */
-	public void broadcast(int registerAddress, int data) {
-	}
+    /**
+     * Send a broadcast write to all devices on the I2C bus.
+     * <p/>
+     * This is not currently implemented!
+     *
+     * @param registerAddress The register to write on all devices on the bus.
+     * @param data            The value to write to the devices.
+     */
+    public void broadcast(int registerAddress, int data) {
+    }
 
-	/**
-	 * Verify that a device's registers contain expected values.
-	 *
-	 * Most devices will have a set of registers that contain a known value that
-	 * can be used to identify them. This allows an I2C device driver to easily
-	 * verify that the device contains the expected value.
-	 *
-	 * @pre The device must support and be configured to use register
-	 *      auto-increment.
-	 *
-	 * @param registerAddress
-	 *            The base register to start reading from the device.
-	 * @param count
-	 *            The size of the field to be verified.
-	 * @param expected
-	 *            A buffer containing the values expected from the device.
-	 * @return true if the sensor was verified to be connected
-	 */
-	public boolean verifySensor(int registerAddress, int count, byte[] expected) {
-		// TODO: Make use of all 7 read bytes
-		byte[] deviceData = new byte[4];
-		for (int i = 0, curRegisterAddress = registerAddress; i < count; i += 4, curRegisterAddress += 4) {
-			int toRead = count - i < 4 ? count - i : 4;
-			// Read the chunk of data. Return false if the sensor does not
-			// respond.
-			if (read(curRegisterAddress, toRead, deviceData)) {
-				return false;
-			}
+    /**
+     * Verify that a device's registers contain expected values.
+     * <p/>
+     * Most devices will have a set of registers that contain a known value that
+     * can be used to identify them. This allows an I2C device driver to easily
+     * verify that the device contains the expected value.
+     *
+     * @param registerAddress The base register to start reading from the device.
+     * @param count           The size of the field to be verified.
+     * @param expected        A buffer containing the values expected from the device.
+     * @return true if the sensor was verified to be connected
+     * @pre The device must support and be configured to use register
+     * auto-increment.
+     */
+    public boolean verifySensor(int registerAddress, int count, byte[] expected) {
+        // TODO: Make use of all 7 read bytes
+        byte[] deviceData = new byte[4];
+        for (int i = 0, curRegisterAddress = registerAddress; i < count; i += 4, curRegisterAddress += 4) {
+            int toRead = count - i < 4 ? count - i : 4;
+            // Read the chunk of data. Return false if the sensor does not
+            // respond.
+            if (read(curRegisterAddress, toRead, deviceData)) {
+                return false;
+            }
 
-			for (byte j = 0; j < toRead; j++) {
-				if (deviceData[j] != expected[i + j]) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+            for (byte j = 0; j < toRead; j++) {
+                if (deviceData[j] != expected[i + j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
