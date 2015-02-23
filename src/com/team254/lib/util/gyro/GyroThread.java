@@ -21,5 +21,7 @@ public class GyroThread {
     }
 
     public void rezero() {}
+    
+    public void reset() {}
 
 }
