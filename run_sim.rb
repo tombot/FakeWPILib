@@ -22,6 +22,7 @@ Dir.chdir(cur_dir)
 system('ant jar')
 
 # move fake wpi lib jar to sim robot dir
+`mkdir #{ARGV[1] + "/lib/"}`
 FileUtils.cp(cur_dir + "/dist/FakeWPILib.jar", ARGV[1] + "/lib/") if has_sim
 FileUtils.cp(ARGV[0]+ "/dist/FRCUserProgram.jar", ARGV[1] + "/lib/") if has_sim
 
