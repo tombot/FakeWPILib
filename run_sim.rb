@@ -61,6 +61,8 @@ FileUtils.rm "META-INF/MANIFEST.MF.old"
 Dir.chdir('..')
 `jar -cmvf classes/META-INF/MANIFEST.MF to_sim.jar -C classes .`
 
+sim_robot_name = "com.team254.frc2016.sim.SimRobot"
+
 # run test harness
-system("java -jar to_sim.jar")
+system("java -jar to_sim.jar #{sim_robot_name}")
 

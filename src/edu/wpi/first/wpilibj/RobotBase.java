@@ -178,7 +178,7 @@ public abstract class RobotBase {
             }
         }
         System.out.println("Robot name: " + robotName);
-        simRobotName = "com.team254.frc2015.sim.SimRobot";
+        simRobotName = args[0];
         System.out.println("Sim Robot name: " + simRobotName);
 
         RobotBase robot;
